@@ -1,0 +1,4 @@
+dependencies {
+	compile "org.grails:grails-datastore-gorm-neo4j:$gormVersion"
+	testRuntime "org.neo4j.test:neo4j-harness:3.1.2"
+}

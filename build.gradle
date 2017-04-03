@@ -1,0 +1,27 @@
+subprojects {
+    ext {
+        userOrg = "grails"
+    }
+    group "org.grails"
+    version "3.3.0.BUILD-SNAPSHOT"
+    apply plugin:'groovy'
+
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.grails.org/grails/core" }
+    }
+
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy:$groovyVersion"
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
+        testRuntime "org.grails:grails-validation:3.2.8"
+        testRuntime "org.grails:grails-datastore-gorm-support:$gormVersion"
+        testCompile("org.spockframework:spock-core:${spockVersion}") {
+            exclude module:'groovy-all'
+        }
+        testCompile "cglib:cglib-nodep:2.2.2"
+        testCompile "org.objenesis:objenesis:1.4"
+    }    
+}

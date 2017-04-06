@@ -11,7 +11,6 @@ import spock.lang.Specification
 /**
  * - New MappingBuilder class to static import
  * - Helps IDEs for code completion
- * - Allows static compilation
  */
 import static grails.gorm.hibernate.mapping.MappingBuilder.*
 
@@ -37,11 +36,6 @@ class Plant {
     String leafColor
 
     static mapping = orm {
-        table {
-            schema("blah")
-            catalog("whatever")
-            name "PLANTZZZZ"
-        }
         version false
         dynamicUpdate true
         leafColor property {

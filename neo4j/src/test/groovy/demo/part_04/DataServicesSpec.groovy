@@ -17,16 +17,19 @@ import spock.lang.Specification
  * - Automatically implement Cypher queries!
  */
 class DataServicesSpec extends Specification {
-    @Shared @AutoCleanup Neo4jDatastore datastore = new Neo4jDatastore(getClass().getPackage())
-    @Shared ClubService clubService = datastore.getService(ClubService)
+    @Shared
+    @AutoCleanup
+    Neo4jDatastore datastore = new Neo4jDatastore(getClass().getPackage())
+    @Shared
+    ClubService clubService = datastore.getService(ClubService)
 
     @Transactional
     def setupSpec() {
         new Club(name: "Real Madrid")
-                .addToPlayers(name:"Ronaldo", age:30)
-                .addToPlayers(name:"Sergio Ramos", age:30)
-                .addToPlayers(name:"Pepe", age:50)
-                .save(flush:true)
+                .addToPlayers(name: "Ronaldo", age: 30)
+                .addToPlayers(name: "Sergio Ramos", age: 30)
+                .addToPlayers(name: "Pepe", age: 50)
+                .save(flush: true)
     }
 
 
@@ -41,7 +44,7 @@ class DataServicesSpec extends Specification {
     def "You can also find native relationships!"() {
         given:
         List<org.neo4j.driver.v1.types.Relationship> relationships = clubService.findClubPlayers("Real Madrid")
-        for( rel in relationships) {
+        for (rel in relationships) {
             println "Player ${Player.get(rel.endNodeId()).name} plays for ${Club.get(rel.startNodeId()).name}"
         }
         expect:
@@ -53,7 +56,7 @@ class DataServicesSpec extends Specification {
 @Entity
 class Club implements Node<Club> {
     String name
-    static hasMany = [players:Player]
+    static hasMany = [players: Player]
 }
 
 @Entity
@@ -65,10 +68,14 @@ class Player implements Node<Player> {
 @Service(Club)
 interface ClubService {
 
-    @Cypher("MATCH ${Club c}-[r:PLAYERS]->${Player p} WHERE $c.name = $name RETURN $p.name")
+    @Cypher("""MATCH ${Club c}-[r:PLAYERS]->${Player p}
+               WHERE $c.name = $name 
+               RETURN $p.name""")
     List<String> findPlayers(String name)
 
-    @Cypher("MATCH ${Club c}-[r:PLAYERS]->${Player p} WHERE $c.name = $name RETURN r")
+    @Cypher("""MATCH ${Club c}-[r:PLAYERS]->${Player p} 
+               WHERE $c.name = $name 
+               RETURN r""")
     List<org.neo4j.driver.v1.types.Relationship> findClubPlayers(String name)
 
     @Cypher("""MATCH ${Player p}
